@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظم الدراسة الذهبي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --silver: #C0C0C0;
+            --dark: #1A120B;
+            --light-dark: #3C2A21;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--dark);
+            color: var(--silver);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: var(--light-dark);
+            color: var(--gold);
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--gold);
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: var(--light-dark);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            color: var(--silver);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: var(--gold);
+            border-bottom: 3px solid var(--gold);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: var(--light-dark);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--gold);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid var(--gold);
+            border-radius: 5px;
+            color: var(--silver);
+        }
+        
+        button {
+            background-color: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        th {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--silver);
+        }
+        
+        .empty-state i {
+            font-size: 50px;
+            color: rgba(192, 192, 192, 0.2);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book"></i> منظم الدراسة الذهبي</h1>
+            <p>أداة بسيطة لتنظيم المواد الدراسية</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="subjects"><i class="fas fa-book"></i> المواد</div>
+            <div class="tab" data-tab="lessons"><i class="fas fa-tasks"></i> الدروس</div>
+            <div class="tab" data-tab="schedule"><i class="fas fa-calendar-alt"></i> الجدول</div>
+        </div>
+        
+        <!-- المواد الدراسية -->
+        <div class="tab-content active" id="subjects">
+            <h2><i class="fas fa-plus-circle"></i> إضافة مادة جديدة</h2>
+            <div class="form-group">
+                <label for="subject-name">اسم المادة</label>
+                <input type="text" id="subject-name" placeholder="أدخل اسم المادة">
+            </div>
+            <button id="add-subject"><i class="fas fa-plus"></i> إضافة</button>
+            
+            <h2 style="margin-top: 30px;"><i class="fas fa-list"></i> قائمة المواد</h2>
+            <table id="subjects-table">
+                <thead>
+                    <tr>
+                        <th>اسم المادة</th>
+                        <th>حذف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم عرض المواد هنا -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- الدروس -->
+        <div class="tab-content" id="lessons">
+            <h2><i class="fas fa-plus-circle"></i> إضافة درس جديد</h2>
+            <div class="form-group">
+                <label for="lesson-subject">المادة</label>
+                <select id="lesson-subject">
+                    <option value="">اختر المادة</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lesson-name">عنوان الدرس</label>
+                <input type="text" id="lesson-name" placeholder="أدخل عنوان الدرس">
+            </div>
+            <div class="form-group">
+                <label for="lesson-date">التاريخ</label>
+                <input type="date" id="lesson-date">
+            </div>
+            <div class="form-group">
+                <label for="lesson-time">الوقت</label>
+                <input type="time" id="lesson-time">
+            </div>
+            <div class="form-group">
+                <label for="lesson-duration">المدة (دقائق)</label>
+                <input type="number" id="lesson-duration" value="45" min="15">
+            </div>
+            <button id="add-lesson"><i class="fas fa-plus"></i> إضافة</button>
+            
+            <h2 style="margin-top: 30px;"><i class="fas fa-list"></i> قائمة الدروس</h2>
+            <table id="lessons-table">
+                <thead>
+                    <tr>
+                        <th>المادة</th>
+                        <th>الدرس</th>
+                        <th>التاريخ</th>
+                        <th>الوقت</th>
+                        <th>المدة</th>
+                        <th>حذف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- سيتم عرض الدروس هنا -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- الجدول -->
+        <div class="tab-content" id="schedule">
+            <h2><i class="fas fa-calendar-alt"></i> عرض الجدول اليومي</h2>
+            <div class="form-group">
+                <label for="schedule-date">اختر اليوم</label>
+                <input type="date" id="schedule-date">
+            </div>
+            
+            <div id="daily-schedule">
+                <div class="empty-state">
+                    <i class="far fa-calendar-alt"></i>
+                    <p>اختر تاريخًا لعرض الجدول</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات التطبيق
+        let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+        let lessons = JSON.parse(localStorage.getItem('lessons')) || [];
+        
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // تبديل الألسنة
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+            
+            // تعيين تاريخ اليوم كافتراضي
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('lesson-date').value = today;
+            document.getElementById('schedule-date').value = today;
+            
+            // تحديث قائمة المواد في dropdown الدروس
+            updateSubjectDropdown();
+            
+            // عرض المواد والدروس الموجودة
+            renderSubjects();
+            renderLessons();
+            
+            // أحداث الأزرار
+            document.getElementById('add-subject').addEventListener('click', addSubject);
+            document.getElementById('add-lesson').addEventListener('click', addLesson);
+            document.getElementById('schedule-date').addEventListener('change', renderSchedule);
+        });
+        
+        // إضافة مادة جديدة
+        function addSubject() {
+            const name = document.getElementById('subject-name').value.trim();
+            if (!name) {
+                alert('الرجاء إدخال اسم المادة');
+                return;
+            }
+            
+            const newSubject = {
+                id: Date.now(),
+                name: name
+            };
+            
+            subjects.push(newSubject);
+            saveSubjects();
+            document.getElementById('subject-name').value = '';
+            renderSubjects();
+            updateSubjectDropdown();
+            
+            alert('تم إضافة المادة بنجاح');
+        }
+        
+        // إضافة درس جديد
+        function addLesson() {
+            const subjectId = document.getElementById('lesson-subject').value;
+            const name = document.getElementById('lesson-name').value.trim();
+            const date = document.getElementById('lesson-date').value;
+            const time = document.getElementById('lesson-time').value;
+            const duration = document.getElementById('lesson-duration').value;
+            
+            if (!subjectId || !name || !date || !time || !duration) {
+                alert('الرجاء ملء جميع الحقول');
+                return;
+            }
+            
+            const subject = subjects.find(s => s.id == subjectId);
+            
+            const newLesson = {
+                id: Date.now(),
+                subjectId: subjectId,
+                subjectName: subject.name,
+                name: name,
+                date: date,
+                time: time,
+                duration: duration
+            };
+            
+            lessons.push(newLesson);
+            saveLessons();
+            
+            // مسح الحقول
+            document.getElementById('lesson-name').value = '';
+            document.getElementById('lesson-time').value = '';
+            
+            renderLessons();
+            renderSchedule();
+            
+            alert('تم إضافة الدرس بنجاح');
+        }
+        
+        // حذف مادة
+        function deleteSubject(id) {
+            if (confirm('هل تريد حذف هذه المادة؟')) {
+                subjects = subjects.filter(s => s.id != id);
+                lessons = lessons.filter(l => l.subjectId != id);
+                saveSubjects();
+                saveLessons();
+                renderSubjects();
+                renderLessons();
+                updateSubjectDropdown();
+                
+                alert('تم حذف المادة بنجاح');
+            }
+        }
+        
+        // حذف درس
+        function deleteLesson(id) {
+            if (confirm('هل تريد حذف هذا الدرس؟')) {
+                lessons = lessons.filter(l => l.id != id);
+                saveLessons();
+                renderLessons();
+                renderSchedule();
+                
+                alert('تم حذف الدرس بنجاح');
+            }
+        }
+        
+        // حفظ البيانات في localStorage
+        function saveSubjects() {
+            localStorage.setItem('subjects', JSON.stringify(subjects));
+        }
+        
+        function saveLessons() {
+            localStorage.setItem('lessons', JSON.stringify(lessons));
+        }
+        
+        // تحديث dropdown المواد
+        function updateSubjectDropdown() {
+            const dropdown = document.getElementById('lesson-subject');
+            dropdown.innerHTML = '<option value="">اختر المادة</option>';
+            
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = subject.name;
+                dropdown.appendChild(option);
+            });
+        }
+        
+        // عرض المواد في الجدول
+        function renderSubjects() {
+            const tbody = document.querySelector('#subjects-table tbody');
+            tbody.innerHTML = '';
+            
+            if (subjects.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="empty-state">لا توجد مواد مسجلة</td></tr>';
+                return;
+            }
+            
+            subjects.forEach(subject => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${subject.name}</td>
+                    <td><button onclick="deleteSubject(${subject.id})">حذف</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // عرض الدروس في الجدول
+        function renderLessons() {
+            const tbody = document.querySelector('#lessons-table tbody');
+            tbody.innerHTML = '';
+            
+            if (lessons.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">لا توجد دروس مسجلة</td></tr>';
+                return;
+            }
+            
+            lessons.forEach(lesson => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${lesson.subjectName}</td>
+                    <td>${lesson.name}</td>
+                    <td>${lesson.date}</td>
+                    <td>${lesson.time}</td>
+                    <td>${lesson.duration} دقيقة</td>
+                    <td><button onclick="deleteLesson(${lesson.id})">حذف</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // عرض الجدول اليومي
+        function renderSchedule() {
+            const date = document.getElementById('schedule-date').value;
+            const container = document.getElementById('daily-schedule');
+            
+            if (!date) {
+                container.innerHTML = '<div class="empty-state"><i class="far fa-calendar-alt"></i><p>اختر تاريخًا لعرض الجدول</p></div>';
+                return;
+            }
+            
+            const dailyLessons = lessons.filter(lesson => lesson.date === date);
+            
+            if (dailyLessons.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="far fa-calendar-alt"></i><p>لا توجد دروس في هذا اليوم</p></div>';
+                return;
+            }
+            
+            let html = '<h3><i class="fas fa-calendar-day"></i> جدول الدروس</h3><ul style="list-style: none; padding: 0;">';
+            dailyLessons.forEach(lesson => {
+                html += `
+                    <li style="background: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 10px; border-radius: 5px; border-right: 3px solid var(--gold);">
+                        <strong style="color: var(--gold);">${lesson.subjectName}</strong>: ${lesson.name}
+                        <br>الوقت: ${lesson.time} (${lesson.duration} دقيقة)
+                    </li>
+                `;
+            });
+            html += '</ul>';
+            
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
